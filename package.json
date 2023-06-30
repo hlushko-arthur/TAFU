@@ -1,0 +1,13 @@
+{
+	"name": "wawNgx",
+	"version": "1.0.0",
+	"scripts": {
+		"start": "waw",
+		"serve": "waw start"
+	},
+	"private": true,
+	"dependencies": {
+		"mongoose": "^5.13.15",
+		"waw": "*"
+	}
+}
