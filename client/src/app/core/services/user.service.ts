@@ -2,7 +2,6 @@ import { FileService, AlertService } from 'wacom';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user.interface';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpService } from './http.service';
 
 @Injectable({
@@ -19,7 +18,6 @@ export class UserService {
 		private _alert: AlertService,
 		private _file: FileService,
 		private _router: Router,
-		// private _http: HttpClient,
 		private _http: HttpService
 	) {
 		this._file.add({
@@ -39,12 +37,6 @@ export class UserService {
 	}
 
 	load(): void {
-		// const token = localStorage.getItem('token') as string;
-
-		// const headers = new HttpHeaders().set('Authorization', token);
-
-		// console.log(headers);
-
 		this._http
 			.get('/api/user/get')
 			.then((resp) => {
@@ -64,9 +56,7 @@ export class UserService {
 					text: 'Цей email вже використовується'
 				});
 			} else {
-				localStorage.setItem('user', JSON.stringify(resp));
-
-				this._router.navigateByUrl('/user/table');
+				this._setUser(resp as User & { token: string });
 			}
 		});
 	}
@@ -78,15 +68,7 @@ export class UserService {
 					text: 'Пароль або емейл введено невірно'
 				});
 			} else {
-				localStorage.setItem('user', JSON.stringify(resp));
-
-				const cookieValue = `Authorization=${
-					resp.token as string
-				}; path=/`;
-
-				document.cookie = cookieValue;
-
-				this._router.navigateByUrl('/user/table');
+				this._setUser(resp as User & { token: string });
 			}
 		});
 	}
@@ -95,5 +77,15 @@ export class UserService {
 		localStorage.removeItem('token');
 
 		this._router.navigateByUrl('/');
+	}
+
+	private _setUser(user: User & { token: string }): void {
+		localStorage.setItem('user', JSON.stringify(user));
+
+		const cookieValue = `Authorization=${user.token}; path=/`;
+
+		document.cookie = cookieValue;
+
+		this._router.navigateByUrl('/user/table');
 	}
 }

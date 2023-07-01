@@ -13,13 +13,7 @@ type SignUser = User & { password: string; passwordCheck: string };
 export class SignComponent {
 	activeForm = 'login';
 
-	user: SignUser = {
-		fullName: '1',
-		password: '1',
-		passwordCheck: '1',
-		email: '1',
-		speciality: 'Строковик'
-	} as SignUser;
+	user: SignUser = {} as SignUser;
 
 	constructor(public config: ConfigService, private _us: UserService) {}
 
