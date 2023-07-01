@@ -6,7 +6,7 @@ export class AuthenticatedGuard implements CanActivate {
 	constructor(private router: Router) {}
 
 	canActivate(): boolean {
-		if (localStorage.getItem('token')) {
+		if (localStorage.getItem('user')) {
 			return true;
 		} else {
 			this.router.navigateByUrl('/');

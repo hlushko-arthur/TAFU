@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class HttpService {
-	constructor(private _httpClient: HttpClient) {}
+	constructor(private _httpClient: HttpClient, private _router: Router) {}
 
 	post(url: string, payload: object): Promise<any> {
 		return new Promise((resolve, reject) => {
@@ -13,10 +14,10 @@ export class HttpService {
 				(resp) => {
 					resolve(resp);
 				},
-				(err) => {
-					console.log(err);
+				(error: { error: { message: string } }) => {
+					this.checkTokenState(error);
 
-					reject(err);
+					reject(error);
 				}
 			);
 		});
@@ -28,12 +29,24 @@ export class HttpService {
 				(resp) => {
 					resolve(resp);
 				},
-				(err) => {
-					console.log(err);
+				(error: { error: { message: string } }) => {
+					this.checkTokenState(error);
 
-					reject(err);
+					reject(error);
 				}
 			);
 		});
+	}
+
+	checkTokenState(error: { error: { message: string } }): void {
+		if (
+			error.error.message === 'Invalid token' ||
+			error.error.message === 'Expired token' ||
+			error.error.message === 'Unauthorized'
+		) {
+			localStorage.removeItem('user');
+
+			this._router.navigateByUrl('/');
+		}
 	}
 }

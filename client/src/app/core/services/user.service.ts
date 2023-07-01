@@ -64,7 +64,7 @@ export class UserService {
 					text: 'Цей email вже використовується'
 				});
 			} else {
-				localStorage.setItem('token', resp.token as string);
+				localStorage.setItem('user', JSON.stringify(resp));
 
 				this._router.navigateByUrl('/user/table');
 			}
@@ -78,7 +78,7 @@ export class UserService {
 					text: 'Пароль або емейл введено невірно'
 				});
 			} else {
-				localStorage.setItem('token', resp.token as string);
+				localStorage.setItem('user', JSON.stringify(resp));
 
 				const cookieValue = `Authorization=${
 					resp.token as string
