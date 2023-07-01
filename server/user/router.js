@@ -2,6 +2,7 @@ const User = require('./schema');
 const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const nJwt = require('njwt');
+
 module.exports = async waw => {
 	if (!waw.config.signingKey) {
 		waw.config.signingKey = uuidv4();
@@ -192,7 +193,7 @@ module.exports = async waw => {
 
 		user.token = nJwt.create(user, waw.config.signingKey);
 
-		user.token.setExpiration(new Date().getTime() + (48 * 60 * 60 * 1000));
+		user.token.setExpiration(new Date().getTime() + (365 * 24 * 60 * 60 * 1000));
 
 		user.token = user.token.compact();
 
@@ -230,29 +231,37 @@ module.exports = async waw => {
 	});
 
 	router.get('/get', async (req, res) => {
-		console.log(isAuthorize(req, res));
-		if (!isAuthorize(req, res)) {
-			return res.status(401).json({ status: false, message: 'Invalid token' })
-		}
 		try {
-			const users = await User.find().select('-password -email -__v');
+			await isAuthorized(req, res);
 
+			const users = await User.find().select('-password -email -__v');
 			res.status(200).json({ status: true, data: users });
 		} catch (error) {
-			res.status(500).json({ status: 500, error: error });
+			res.status(500).json({ status: false, message: error.message });
 		}
-	})
+	});
 
-	const isAuthorize = (req, res) => {
-		if (!req.headers.authorization) {
-			return false;
+	const isAuthorized = async (req, res) => {
+		if (!req.cookies.Authorization) {
+			throw new Error('Unauthorized');
 		}
 
 		try {
-			nJwt.verify(req.headers.authorization, waw.config.signingKey);
-			return true;
+			await new Promise((resolve, reject) => {
+				nJwt.verify(req.cookies.Authorization, waw.config.signingKey, (err) => {
+					if (err) {
+						if (err.message === 'Jwt is expired') {
+							return reject(new Error('Token expired'));
+						} else {
+							return reject(new Error('Invalid token'));
+						}
+					}
+
+					resolve();
+				});
+			});
 		} catch (error) {
-			return false;
+			throw new Error(error.message || 'Invalid token');
 		}
-	}
+	};
 };
