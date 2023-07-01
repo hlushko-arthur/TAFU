@@ -1,42 +1,24 @@
-import {
-	Any,
-	MongoService,
-	FileService,
-	HttpService,
-	AlertService,
-	CoreService
-} from 'wacom';
+import { FileService, AlertService } from 'wacom';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/core';
-
-interface AnyUser {
-	[key: string]: User;
-}
+import { User } from '../interfaces/user.interface';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class UserService {
-	user: User = this.new();
-
-	roles = ['admin'];
-
-	role(role: string): boolean {
-		return !!this.user.is[role];
-	}
+	user: User = {} as User;
 
 	users: User[] = [];
 
-	_users: AnyUser = {};
+	// _users:  = {};
 
 	constructor(
 		private _alert: AlertService,
-		private _mongo: MongoService,
-		private _http: HttpService,
 		private _file: FileService,
-		private _core: CoreService,
-		private _router: Router
+		private _router: Router,
+		private _http: HttpClient
 	) {
 		this._file.add({
 			id: 'userAvatarUrl',
@@ -49,124 +31,56 @@ export class UserService {
 			}
 		});
 
-		this._mongo.config('user', {
-			replace: {
-				data: (data: Any, cb: (data: Any) => Any) => {
-					if (typeof data != 'object') data = {};
-
-					cb(data);
-				},
-				is: this._mongo.beObj
-			}
-		});
-
 		if (localStorage.getItem('waw_user')) {
 			this.user = JSON.parse(localStorage.getItem('waw_user') as string);
-
-			this._core.done('us.user');
-
-			this.load();
 		}
 	}
 
 	load(): void {
-		this.user = this._mongo.fetch(
-			'user',
-			{
-				name: 'me'
-			},
-			(user: User) => {
-				if (user) {
-					this.user = user;
+		const token = localStorage.getItem('token') as string;
 
-					this._core.done('us.user');
+		const headers = new HttpHeaders().set('Authorization', token);
 
-					localStorage.setItem('waw_user', JSON.stringify(user));
-				} else {
-					this.logout();
-				}
+		console.log(headers);
+
+		this._http.get('/api/user/get', { headers }).subscribe((resp) => {
+			if (resp) {
+				this.users = resp as User[];
 			}
-		);
-
-		this.users = this._mongo.get('user', (users: User[], obj: AnyUser) => {
-			this._users = obj;
 		});
 	}
 
-	new(): User {
-		return {
-			name: '',
-			email: '',
-			thumb: '',
-			is: {},
-			data: {}
-		};
-	}
+	signup(payload: object): void {
+		this._http.post('/api/user/sign', payload).subscribe((resp: any) => {
+			if (!resp) {
+				this._alert.error({
+					text: 'Цей email вже використовується'
+				});
+			} else {
+				localStorage.setItem('token', resp.token as string);
 
-	create(user: User): void {
-		this._mongo.create('user', user);
-	}
-
-	doc(userId: string): User {
-		if (!this._users[userId]) {
-			this._users[userId] = this._mongo.fetch('user', {
-				query: { _id: userId }
-			});
-		}
-
-		return this._users[userId];
-	}
-
-	update(): void {
-		this._mongo.afterWhile(this, () => {
-			localStorage.setItem('waw_user', JSON.stringify(this.user));
-
-			this._mongo.update('user', this.user);
-		});
-	}
-
-	save(user: User): void {
-		this._mongo.afterWhile(this, () => {
-			this._mongo.update('user', user, {
-				name: 'admin'
-			});
-		});
-	}
-
-	delete(user: User): void {
-		this._mongo.delete('user', user, {
-			name: 'admin'
-		});
-	}
-
-	change_password(oldPass: string, newPass: string): void {
-		this._http.post(
-			'/api/user/changePassword',
-			{
-				newPass: newPass,
-				oldPass: oldPass
-			},
-			(resp: boolean) => {
-				if (resp) {
-					this._alert.info({
-						text: 'Successfully changed password'
-					});
-				} else {
-					this._alert.error({
-						text: 'Failed to change password'
-					});
-				}
+				this._router.navigateByUrl('/user/table');
 			}
-		);
+		});
+	}
+
+	login(payload: object): void {
+		this._http.post('/api/user/login', payload).subscribe((resp: any) => {
+			if (!resp) {
+				this._alert.warning({
+					text: 'Пароль або емейл введено невірно'
+				});
+			} else {
+				localStorage.setItem('token', resp.token as string);
+
+				this._router.navigateByUrl('/user/table');
+			}
+		});
 	}
 
 	logout(): void {
-		this.user = this.new();
+		localStorage.removeItem('token');
 
-		localStorage.removeItem('waw_user');
-
-		this._router.navigateByUrl('/sign');
-
-		this._http.remove('token');
+		this._router.navigateByUrl('/');
 	}
 }

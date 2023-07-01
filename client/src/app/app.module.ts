@@ -10,11 +10,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // config
 import { WacomModule } from 'wacom';
 import { environment } from 'src/environments/environment';
+import { FooterComponent } from './core/components/footer/footer.component';
 
 const routes: Routes = [
 	{
 		path: '',
-		// canActivate: [GuestGuard],
+		canActivate: [GuestGuard],
 		children: [
 			{
 				path: '',
@@ -33,7 +34,8 @@ const routes: Routes = [
 	},
 	{
 		path: 'user',
-		// canActivate: [AuthenticatedGuard],
+		canActivate: [AuthenticatedGuard],
+		component: FooterComponent,
 		children: [
 			{
 				path: 'profile',

@@ -6,10 +6,10 @@ export class AuthenticatedGuard implements CanActivate {
 	constructor(private router: Router) {}
 
 	canActivate(): boolean {
-		if (localStorage.getItem('waw_user')) {
+		if (localStorage.getItem('token')) {
 			return true;
 		} else {
-			this.router.navigateByUrl('/sign');
+			this.router.navigateByUrl('/');
 
 			return false;
 		}

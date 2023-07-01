@@ -1,14 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const schema = mongoose.Schema({
-	is: {},
-	data: {},
-	thumb: {type: String, default: '/assets/default.png'},
 	email: {type: String, unique: true, sparse: true, trim: true},
-	reg_email: {type: String, unique: true, sparse: true, trim: true},
+	fullName: String,
+	speciality: String,
+	thumb: {type: String, default: '/assets/default.png'},
 	password: String,
-	name: String,
-	resetPin: Number
 }, {
 	minimize: false
 });

@@ -1,11 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { User } from 'src/app/core/interfaces/user.interface';
 import { ConfigService } from 'src/app/core/services/config.service';
-
-export interface User {
-	name: string;
-	speciality: string;
-}
+import { UserService } from 'src/app/core/services/user.service';
 
 type SignUser = User & { password: string; passwordCheck: string };
 
@@ -14,15 +11,34 @@ type SignUser = User & { password: string; passwordCheck: string };
 	styleUrls: ['./sign.component.scss']
 })
 export class SignComponent {
-	user: SignUser = {} as SignUser;
+	activeForm = 'login';
 
-	constructor(public config: ConfigService, private _http: HttpClient) {}
+	user: SignUser = {
+		fullName: '1',
+		password: '1',
+		passwordCheck: '1',
+		email: '1',
+		speciality: 'Строковик'
+	} as SignUser;
 
-	signup(): void {}
+	constructor(public config: ConfigService, private _us: UserService) {}
+
+	signup(): void {
+		this._us.signup(this.user);
+	}
+
+	login(): void {
+		this._us.login(this.user);
+	}
+
+	get isLoginButtonDisabled(): boolean {
+		return !this.user.email || !this.user.password;
+	}
 
 	get isSignButtonDisabled(): boolean {
 		return (
-			!this.user.name ||
+			!this.user.email ||
+			!this.user.fullName ||
 			!this.user.password ||
 			!this.user.passwordCheck ||
 			!this.user.speciality ||
