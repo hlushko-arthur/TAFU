@@ -2,6 +2,9 @@ const User = require('./schema');
 const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const nJwt = require('njwt');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = async waw => {
 	if (!waw.config.signingKey) {
@@ -14,7 +17,6 @@ module.exports = async waw => {
 		waw.writeJson(process.cwd() + '/server.json', serverJson);
 	}
 
-	// initialize
 	if (waw.config.mail) {
 		const nodemailer = require("nodemailer");
 
@@ -109,8 +111,6 @@ module.exports = async waw => {
 
 	const new_pin = async (user, cb = () => { }) => {
 		user.resetPin = Math.floor(Math.random() * (999999 - 100000)) + 100000;
-
-		console.log(user.resetPin);
 
 		user.markModified('data');
 
@@ -240,6 +240,114 @@ module.exports = async waw => {
 			res.status(500).json({ status: false, message: error.message });
 		}
 	});
+
+	const avatarStorage = multer.diskStorage({
+		destination: 'server/user/avatar',
+		filename: (req, file, cb) => {
+			const ext = file.mimetype.split("/")[1];
+			cb(null, `${Date.now()}.${ext}`);
+		},
+	});
+
+	const documentStorage = multer.diskStorage({
+		destination: 'server/user/document',
+		filename: (req, file, cb) => {
+			const ext = file.mimetype.split("/")[1];
+			cb(null, `${Date.now()}.${ext}`);
+		},
+	});
+
+	const imageFilter = (req, file, cb) => {
+		var ext = path.extname(file.originalname);
+		if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+			return cb(new Error('Only images are allowed'))
+		}
+		cb(null, true)
+	}
+
+	const uploadAvatar = multer({
+		storage: avatarStorage,
+		fileFilter: imageFilter,
+	});
+
+	const uploadDocument = multer({
+		storage: documentStorage,
+		fileFilter: imageFilter,
+	});
+
+	router.post('/uploadAvatar', uploadAvatar.single('file'), async (req, res) => {
+		try {
+			await isAuthorized(req, res);
+			const userData = await getUserFromToken(req.cookies.Authorization).body;
+			const user = await findUserById(userData._id);
+
+			console.log(user);
+			user.avatar = req.file.path.replace('server', '/api')
+			user.save();
+			res.status(200).json({ status: true, data: { filepath: user.avatar } });
+		} catch (error) {
+			res.status(500).json({ status: false, message: error.message });
+		}
+	})
+
+	router.post('/uploadDocument', uploadDocument.single('file'), async (req, res) => {
+		try {
+			await isAuthorized(req, res);
+			const userData = await getUserFromToken(req.cookies.Authorization).body;
+			const user = await findUserById(userData._id);
+
+			console.log(user);
+			user.document = req.file.path.replace('server', '/api')
+			user.save();
+			res.status(200).json({ status: true, data: { filepath: user.document } });
+		} catch (error) {
+			res.status(500).json({ status: false, message: error.message });
+		}
+	})
+
+	router.get('/avatar/:filename', async (req, res) => {
+		try {
+			await isAuthorized(req, res);
+
+			const filename = req.params.filename;
+			const filePath = path.join(__dirname, 'avatar', filename);
+
+
+			if (fs.existsSync(filePath)) {
+				res.sendFile(filePath);
+			} else {
+				res.status(404).json({ message: 'File not found' });
+			}
+		} catch (error) {
+			res.status(500).json({ status: false, message: error.message });
+		}
+	});
+
+	router.get('/document/:filename', async (req, res) => {
+		try {
+			await isAuthorized(req, res);
+			const filename = req.params.filename;
+			const filePath = path.join(__dirname, 'document', filename);
+
+			if (fs.existsSync(filePath)) {
+				res.sendFile(filePath);
+			} else {
+				res.status(404).json({ message: 'File not found' });
+			}
+		} catch (error) {
+			res.status(500).json({ status: false, message: error.message });
+		}
+	});
+
+	const getUserFromToken = (token) => {
+		return nJwt.verify(token, waw.config.signingKey);
+	}
+
+	const findUserById = async (id) => {
+		return await User.findById({
+			_id: id
+		});
+	}
 
 	const isAuthorized = async (req, res) => {
 		if (!req.cookies.Authorization) {

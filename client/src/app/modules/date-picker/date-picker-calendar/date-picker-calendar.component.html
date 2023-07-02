@@ -1,0 +1,44 @@
+<div class="wdp-wrapper" [class._single]="!isRange">
+	<div class="wdp-header">
+		<i class="icon-chevron-left" (click)="prevMonth()"></i>
+		<span class="wdp-header_title">
+			<!-- <span>{{ currentDate | momentDate: 'MMMM' }}</span> -->
+			<span>{{ currentDate | dateFormat: 'month'}}</span>
+			<!-- <span class="ml10">{{ currentDate | momentDate: 'YYYY' }}</span> -->
+			<span class="ml10">{{ currentDate | dateFormat: 'year'}}</span>
+		</span>
+		<i class="icon-chevron-right" (click)="nextMonth()"></i>
+	</div>
+	<div class="wdp-body">
+		<table>
+			<thead class="wdp-weeks">
+				<th>MON</th>
+				<th>TUE</th>
+				<th>WED</th>
+				<th>THU</th>
+				<th>FRI</th>
+				<th>SAT</th>
+				<th>SUN</th>
+			</thead>
+
+			<tbody class="wdp-cells-row" *ngFor="let week of weeks">
+				<td
+					class="wdp-cell"
+					[class._disabled]="day.isDisabled"
+					[class._othermonth]="day.isOtherMonth"
+					[class._in-range]="isRange && isDateInRange(day.date)"
+					[class._range-start]="isRange && selectedDates[0] === day.date"
+					[class._range-end]="isRange && selectedDates[1] === day.date"
+					[class._selected]="selectedDates.includes(day.date)"
+					[class._today]="day.date === today"
+					(mouseenter)="isRange && selectedDates.length !== 2 && hoverDate = day.date"
+					(mouseleave)="hoverDate = ''"
+					(click)="selectDate(day.date)"
+					*ngFor="let day of week.days"
+				>
+					{{day.date | date: 'd'}}
+				</td>
+			</tbody>
+		</table>
+	</div>
+</div>

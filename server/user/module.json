@@ -7,6 +7,8 @@
 		"nodemailer": "*",
 		"njwt": "*",
 		"uuid": "*",
-		"cookie-parser": "*"
+		"cookie-parser": "*",
+		"fs": "*",
+		"multer": "*"
 	}
 }

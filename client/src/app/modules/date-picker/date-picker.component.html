@@ -1,0 +1,48 @@
+<div
+	class="day-label"
+	[ngClass]="'_'+type"
+	[class._multiple]="isMultiple"
+	(click)="showCalendar()"
+>
+	<div class="cut" *ngIf="!isRange && !isMultiple">
+		<div>{{selectedDates[0] | dateFormat: 'date' }}</div>
+	</div>
+
+	<div *ngIf="isMultiple">
+		<ng-container *ngIf="selectedDates.length; else notSelected">
+			<span
+				class="coma mr5"
+				*ngFor="let date of selectedDates; index as i"
+				>{{date | dateFormat: 'date'}}</span
+			>
+		</ng-container>
+		<ng-template #notSelected
+			><span class="cl-text-l">Not selected</span></ng-template
+		>
+	</div>
+
+	<div class="cut" *ngIf="isRange">
+		<ng-container
+			*ngIf="selectedDates.length || !isAllowEmptyDate; else notSelected"
+		>
+			<ng-container
+				*ngIf="selectedDates[1] && selectedDates[0] !== selectedDates[1]; else isEqualDates"
+			>
+				{{selectedDates[0] | dateFormat: 'date'}} - {{(selectedDates[1]
+				|| selectedDates[0]) | dateFormat: 'date'}}</ng-container
+			>
+
+			<ng-template #isEqualDates>
+				{{selectedDates[0] | dateFormat: 'date'}}
+			</ng-template>
+		</ng-container>
+
+		<ng-template #notSelected
+			><span class="cl-text-l">Not selected</span></ng-template
+		>
+	</div>
+</div>
+
+<span class="ibtn _clear ml" *ngIf="isClearable" (click)="resetDate()">
+	<i class="mico">layers_clear</i>
+</span>

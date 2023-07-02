@@ -34,11 +34,6 @@
 		</label>
 
 		<label>
-			ПІБ
-			<input [(ngModel)]="user.fullName" type="text" />
-		</label>
-
-		<label>
 			Пароль
 			<input [(ngModel)]="user.password" type="password" />
 		</label>
@@ -46,19 +41,6 @@
 		<label>
 			Повторіть пароль
 			<input [(ngModel)]="user.passwordCheck" type="password" />
-		</label>
-
-		<label>
-			Спеціалізація
-			<select [(ngModel)]="user.speciality">
-				<option [value]="undefined">Не вибрано</option>
-				<option
-					*ngFor="let speciality of config.specialities"
-					[value]="speciality"
-				>
-					{{speciality}}
-				</option>
-			</select>
 		</label>
 
 		<button [disabled]="isSignButtonDisabled" (click)="signup()">

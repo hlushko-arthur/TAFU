@@ -1,4 +1,84 @@
 <div class="content">
-	PROFILE COMPONENT
+	<div>
+		<div class="file-upload">
+			<input
+				type="file"
+				id="uploadAvatar"
+				class="file-input"
+				(change)="onFileUpload($event, 'avatar')"
+				accept="image/*"
+			/>
+			<label for="uploadAvatar" class="file-label">
+				<span class="file-icon">+</span>
+				<span class="file-text">Upload Picture</span>
+			</label>
+			<img
+				*ngIf="us.user.avatar"
+				[src]="us.user.avatar"
+				alt="Preview"
+				class="preview-image"
+			/>
+		</div>
+
+		<div class="file-upload">
+			<input
+				type="file"
+				id="uploadDocument"
+				class="file-input"
+				(change)="onFileUpload($event, 'document')"
+				accept="image/*"
+			/>
+			<label for="uploadDocument" class="file-label">
+				<span class="file-icon">+</span>
+				<span class="file-text">Upload Picture</span>
+			</label>
+			<img
+				*ngIf="us.user.document"
+				[src]="us.user.document"
+				alt="Preview"
+				class="preview-image"
+			/>
+		</div>
+	</div>
+
+	<div>
+		<label>
+			ПІБ
+			<input type="text" [(ngModel)]="us.user.fullName" />
+		</label>
+
+		<label>
+			Місто
+			<input type="text" [(ngModel)]="us.user.fullName" />
+		</label>
+
+		<label>
+			Частина
+			<input type="text" [(ngModel)]="us.user.fullName" />
+		</label>
+
+		<label>
+			Спеціалізація
+			<select [(ngModel)]="us.user.speciality">
+				<option [value]="undefined">Не вибрано</option>
+				<option
+					*ngFor="let speciality of config.specialities"
+					[value]="speciality"
+				>
+					{{speciality}}
+				</option>
+			</select>
+		</label>
+
+		<label>
+			<!-- Дата народження -->
+			<!-- <input type="date" [(ngModel)]="us.user.fullName" /> -->
+			<date-picker
+				[date]="us.user.birthday || ''"
+				(dateChange)="us.user.birthday = $event"
+			></date-picker>
+		</label>
+	</div>
+
 	<button (click)="us.logout()">logout</button>
 </div>

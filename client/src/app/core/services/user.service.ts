@@ -1,4 +1,4 @@
-import { FileService, AlertService } from 'wacom';
+import { AlertService } from 'wacom';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user.interface';
@@ -16,24 +16,16 @@ export class UserService {
 
 	constructor(
 		private _alert: AlertService,
-		private _file: FileService,
 		private _router: Router,
 		private _http: HttpService
 	) {
-		this._file.add({
-			id: 'userAvatarUrl',
-			resize: 256,
-			part: 'user',
-			cb: (file: string | File) => {
-				if (typeof file != 'string') return;
-
-				this.user.thumb = file;
-			}
-		});
-
 		if (localStorage.getItem('waw_user')) {
 			this.user = JSON.parse(localStorage.getItem('waw_user') as string);
 		}
+
+		this.user = JSON.parse(
+			(localStorage.getItem('user') as string) || '{}'
+		);
 	}
 
 	load(): void {
@@ -56,7 +48,7 @@ export class UserService {
 					text: 'Цей email вже використовується'
 				});
 			} else {
-				this._setUser(resp as User & { token: string });
+				this._setAuthorizedUser(resp as User & { token: string });
 			}
 		});
 	}
@@ -68,24 +60,50 @@ export class UserService {
 					text: 'Пароль або емейл введено невірно'
 				});
 			} else {
-				this._setUser(resp as User & { token: string });
+				this._setAuthorizedUser(resp as User & { token: string });
 			}
 		});
 	}
 
+	async uploadImage(file: File, type: 'avatar' | 'document'): Promise<any> {
+		const formData: FormData = new FormData();
+
+		formData.append('file', file, file.name);
+
+		formData.append('type', type);
+
+		return await new Promise((resolve, reject) => {
+			this._http
+				.post(
+					`/api/user/upload${type
+						.charAt(0)
+						.toUpperCase()}${type.substring(1)}`,
+					formData
+				)
+				.then(
+					(response) => {
+						resolve(response);
+					},
+					(error) => {
+						reject(error);
+					}
+				);
+		});
+	}
+
 	logout(): void {
-		localStorage.removeItem('token');
+		localStorage.removeItem('user');
 
 		this._router.navigateByUrl('/');
 	}
 
-	private _setUser(user: User & { token: string }): void {
+	private _setAuthorizedUser(user: User & { token: string }): void {
 		localStorage.setItem('user', JSON.stringify(user));
 
 		const cookieValue = `Authorization=${user.token}; path=/`;
 
 		document.cookie = cookieValue;
 
-		this._router.navigateByUrl('/user/table');
+		this._router.navigateByUrl('/user/profile');
 	}
 }

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { User } from 'src/app/core/interfaces/user.interface';
 import { ConfigService } from 'src/app/core/services/config.service';
@@ -15,7 +14,7 @@ export class SignComponent {
 
 	user: SignUser = {} as SignUser;
 
-	constructor(public config: ConfigService, private _us: UserService) {}
+	constructor(private _us: UserService) {}
 
 	signup(): void {
 		this._us.signup(this.user);
@@ -32,10 +31,8 @@ export class SignComponent {
 	get isSignButtonDisabled(): boolean {
 		return (
 			!this.user.email ||
-			!this.user.fullName ||
 			!this.user.password ||
 			!this.user.passwordCheck ||
-			!this.user.speciality ||
 			this.user.password !== this.user.passwordCheck
 		);
 	}
