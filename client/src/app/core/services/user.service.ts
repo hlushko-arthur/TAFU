@@ -3,6 +3,10 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { HttpService } from './http.service';
+import {
+	ServerResponse,
+	ServerResponseError
+} from '../interfaces/server.interface';
 
 @Injectable({
 	providedIn: 'root'
@@ -65,12 +69,29 @@ export class UserService {
 		});
 	}
 
-	update(user: User = this.user): void {
-		this._http.post('/api/user/update', user).then((resp) => {
-			if (resp.status) {
-				localStorage.setItem('user', JSON.stringify(this.user));
-			}
+	update(user: User): any {
+		this._alert.destroy();
+
+		this._alert.info({
+			text: 'Profile is updating...'
 		});
+
+		return this._http
+			.post('/api/user/update', user)
+			.then((resp: ServerResponse | ServerResponseError) => {
+				if (resp.status) {
+					localStorage.setItem('user', JSON.stringify(user));
+
+					this._alert.destroy();
+
+					this._alert.success({
+						text: 'Profile has been succesfully updated'
+					});
+				} else {
+					this._handleError(resp as ServerResponseError);
+				}
+			})
+			.catch(this._handleError);
 	}
 
 	async uploadImage(file: File, type: 'avatar' | 'document'): Promise<any> {
@@ -105,13 +126,23 @@ export class UserService {
 		this._router.navigateByUrl('/');
 	}
 
-	private _setAuthorizedUser(user: User & { token: string }): void {
-		localStorage.setItem('user', JSON.stringify(user));
-
-		const cookieValue = `Authorization=${user.token}; path=/`;
+	private _setAuthorizedUser(user: User & { token?: string }): void {
+		const cookieValue = `Authorization=${user.token as string}; path=/`;
 
 		document.cookie = cookieValue;
 
+		delete user.token;
+
+		localStorage.setItem('user', JSON.stringify(user));
+
 		this._router.navigateByUrl('/user/profile');
+	}
+
+	private _handleError(err: { message: string }): void {
+		this._alert.destroy();
+
+		this._alert.warning({
+			text: `Something went wrong. ${err.message}`
+		});
 	}
 }

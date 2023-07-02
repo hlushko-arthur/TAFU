@@ -13,8 +13,8 @@
 				<span class="file-text">Upload Picture</span>
 			</label>
 			<img
-				*ngIf="us.user.avatar"
-				[src]="us.user.avatar"
+				*ngIf="user.avatar"
+				[src]="user.avatar"
 				alt="Preview"
 				class="preview-image"
 			/>
@@ -33,8 +33,8 @@
 				<span class="file-text">Upload Picture</span>
 			</label>
 			<img
-				*ngIf="us.user.document"
-				[src]="us.user.document"
+				*ngIf="user.document"
+				[src]="user.document"
 				alt="Preview"
 				class="preview-image"
 			/>
@@ -44,36 +44,21 @@
 	<div>
 		<label>
 			ПІБ
-			<input
-				type="text"
-				[(ngModel)]="us.user.fullName"
-				(ngModelChange)="onUserChange()"
-			/>
+			<input type="text" [(ngModel)]="user.fullName" />
 		</label>
 
 		<label>
-			<phone
-				label="Номер телефону"
-				[(phone)]="us.user.phone"
-				(phoneChange)="onUserChange()"
-			></phone>
+			<phone label="Номер телефону" [(phone)]="user.phone"></phone>
 		</label>
 
 		<label>
 			Місто
-			<input
-				type="text"
-				[(ngModel)]="us.user.city"
-				(ngModelChange)="onUserChange()"
-			/>
+			<input type="text" [(ngModel)]="user.city" />
 		</label>
 
 		<label>
 			Спеціалізація
-			<select
-				[(ngModel)]="us.user.speciality"
-				(ngModelChange)="onUserChange()"
-			>
+			<select [(ngModel)]="user.speciality">
 				<option [value]="undefined">Не вибрано</option>
 				<option
 					*ngFor="let speciality of config.specialities"
@@ -85,14 +70,19 @@
 		</label>
 
 		<label>
-			<!-- Дата народження -->
-			<!-- <input type="date" [(ngModel)]="us.user.fullName" /> -->
-			<date-picker
-				[date]="us.user.birthday || ''"
-				(dateChange)="us.user.birthday = $event; onUserChange()"
-			></date-picker>
+			Дата народження
+			<input type="date" [(ngModel)]="user.birthday" />
+			<!-- <date-picker
+				[date]="user.birthday || ''"
+				(dateChange)="user.birthday = $even
+			></date-picker> -->
 		</label>
-	</div>
 
-	<button (click)="us.logout()">logout</button>
+		<div>
+			<button (click)="us.logout()">logout</button>
+			<button [disabled]="isUserHasChanges" (click)="updateUser()">
+				save
+			</button>
+		</div>
+	</div>
 </div>
