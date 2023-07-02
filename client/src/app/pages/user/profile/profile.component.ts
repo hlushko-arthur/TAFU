@@ -12,8 +12,6 @@ export class ProfileComponent {
 	onFileUpload(event: Event, type: 'avatar' | 'document'): void {
 		const file = (event.target as HTMLInputElement)?.files?.[0];
 
-		console.log(file);
-
 		if (file) {
 			this.us.uploadImage(file, type).then((resp) => {
 				this.us.user[type] = resp.data.filepath;
@@ -23,5 +21,15 @@ export class ProfileComponent {
 				localStorage.setItem('user', JSON.stringify(this.us.user));
 			});
 		}
+	}
+
+	onUserChange(): void {
+		this.config.afterWhile(
+			'onUserChange',
+			() => {
+				this.us.update();
+			},
+			1000
+		);
 	}
 }

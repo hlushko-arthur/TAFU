@@ -65,6 +65,14 @@ export class UserService {
 		});
 	}
 
+	update(user: User = this.user): void {
+		this._http.post('/api/user/update', user).then((resp) => {
+			if (resp.status) {
+				localStorage.setItem('user', JSON.stringify(this.user));
+			}
+		});
+	}
+
 	async uploadImage(file: File, type: 'avatar' | 'document'): Promise<any> {
 		const formData: FormData = new FormData();
 

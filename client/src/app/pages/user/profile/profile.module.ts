@@ -4,6 +4,7 @@ import { ProfileComponent } from './profile.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatepickerModule } from 'src/app/modules/date-picker/date-picker.module';
+import { CoreModule } from 'src/app/core/core.module';
 
 const routes: Routes = [
 	{
@@ -15,6 +16,7 @@ const routes: Routes = [
 @NgModule({
 	imports: [
 		DatepickerModule,
+		CoreModule,
 		CommonModule,
 		FormsModule,
 		RouterModule.forChild(routes)

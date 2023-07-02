@@ -241,6 +241,27 @@ module.exports = async waw => {
 		}
 	});
 
+	router.post('/update', async (req, res) => {
+		try {
+			const updatedUser = await User.updateOne({ _id: req.body._id }, req.body);
+
+			if (updatedUser.n === 0) {
+				return res.status(404).json({ status: false, message: 'Student not found' });
+			}
+
+			res.status(200).json({
+				status: true,
+				data: [updatedUser],
+			});
+		} catch (err) {
+			res.status(500).json({
+				status: false,
+				message: error.message,
+				error: err,
+			});
+		}
+	})
+
 	const avatarStorage = multer.diskStorage({
 		destination: 'server/user/avatar',
 		filename: (req, file, cb) => {

@@ -44,22 +44,36 @@
 	<div>
 		<label>
 			ПІБ
-			<input type="text" [(ngModel)]="us.user.fullName" />
+			<input
+				type="text"
+				[(ngModel)]="us.user.fullName"
+				(ngModelChange)="onUserChange()"
+			/>
+		</label>
+
+		<label>
+			<phone
+				label="Номер телефону"
+				[(phone)]="us.user.phone"
+				(phoneChange)="onUserChange()"
+			></phone>
 		</label>
 
 		<label>
 			Місто
-			<input type="text" [(ngModel)]="us.user.fullName" />
-		</label>
-
-		<label>
-			Частина
-			<input type="text" [(ngModel)]="us.user.fullName" />
+			<input
+				type="text"
+				[(ngModel)]="us.user.city"
+				(ngModelChange)="onUserChange()"
+			/>
 		</label>
 
 		<label>
 			Спеціалізація
-			<select [(ngModel)]="us.user.speciality">
+			<select
+				[(ngModel)]="us.user.speciality"
+				(ngModelChange)="onUserChange()"
+			>
 				<option [value]="undefined">Не вибрано</option>
 				<option
 					*ngFor="let speciality of config.specialities"
@@ -75,7 +89,7 @@
 			<!-- <input type="date" [(ngModel)]="us.user.fullName" /> -->
 			<date-picker
 				[date]="us.user.birthday || ''"
-				(dateChange)="us.user.birthday = $event"
+				(dateChange)="us.user.birthday = $event; onUserChange()"
 			></date-picker>
 		</label>
 	</div>
