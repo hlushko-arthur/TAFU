@@ -8,7 +8,7 @@ export class SearchPipe implements PipeTransform {
 		array: { [key: string]: any }[],
 		search: string,
 		keys?: string[]
-	): IStudent[] {
+	): unknown[] {
 		if (!array || !search) {
 			return array;
 		}
