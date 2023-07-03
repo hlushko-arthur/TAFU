@@ -59,8 +59,8 @@ const routes: Routes = [
 					}
 				},
 				loadChildren: () =>
-					import('./pages/user/table/table.module').then(
-						(m) => m.TableModule
+					import('./pages/user/list/list.module').then(
+						(m) => m.ListModule
 					)
 			}
 		]
@@ -100,4 +100,4 @@ const routes: Routes = [
 	providers: [AuthenticatedGuard, GuestGuard, AdminsGuard],
 	bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

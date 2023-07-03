@@ -1,0 +1,27 @@
+<div class="content">
+	<div class="specialities">
+		<div *ngFor="let speciality of config.specialities">{{speciality}}</div>
+	</div>
+
+	<div>
+		<div>
+			<input type="text" placeholder="Пошук..." />
+		</div>
+	</div>
+
+	<div>
+		<div *ngFor="let user of us.users">
+			<div>
+				<img [src]="user.avatar" alt="" />
+			</div>
+
+			<div>
+				<div>{{user.fullName}}</div>
+
+				<div>{{user.phone}}</div>
+
+				<div>{{user.city}}, {{user.address}}</div>
+			</div>
+		</div>
+	</div>
+</div>

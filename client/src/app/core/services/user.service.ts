@@ -37,12 +37,28 @@ export class UserService {
 			.get('/api/user/get')
 			.then((resp) => {
 				if (resp) {
-					this.users = resp as User[];
+					this.users = resp.data as User[];
 				}
 			})
 			.catch((err) => {
 				console.log(err);
 			});
+	}
+
+	async fetch(_id: string): Promise<User> {
+		let user = {} as User;
+
+		await this._http
+			.post('/api/user/fetch', {
+				_id
+			})
+			.then((resp: ServerResponse) => {
+				user = resp.data as User;
+			});
+
+		console.log(user);
+
+		return user;
 	}
 
 	signup(payload: object): void {

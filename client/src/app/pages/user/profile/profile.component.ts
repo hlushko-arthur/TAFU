@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/core/interfaces/user.interface';
 import { ConfigService } from 'src/app/core/services/config.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -12,7 +13,32 @@ export class ProfileComponent implements OnInit {
 
 	isHttpLoading = false;
 
-	constructor(public us: UserService, public config: ConfigService) {}
+	userId: string;
+
+	constructor(
+		public us: UserService,
+		public config: ConfigService,
+		private _router: Router,
+		private _activatedRoute: ActivatedRoute
+	) {
+		this.loadUser();
+	}
+
+	async loadUser(): Promise<void> {
+		this.userId = this._activatedRoute.snapshot.params['id'];
+
+		if (!this.userId) {
+			this.userId = this.us.user._id;
+
+			this._router.navigate([`/user/profile/${this.userId}`]);
+
+			return;
+		}
+
+		console.log(this.userId);
+
+		this.user = await this.us.fetch(this.userId);
+	}
 
 	ngOnInit(): void {
 		this.user = JSON.parse(JSON.stringify(this.us.user));

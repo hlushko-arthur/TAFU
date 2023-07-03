@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 	providedIn: 'root'
 })
 export class ConfigService {
-	specialities = ['Строковик', 'Мобілізований'];
+	specialities = ['Строковик', 'Мобілізований', 'Офіцер запасу'];
 
 	phoneMask = '+380 (00) 000-00-00';
 

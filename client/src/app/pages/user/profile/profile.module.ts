@@ -10,6 +10,10 @@ const routes: Routes = [
 	{
 		path: '',
 		component: ProfileComponent
+	},
+	{
+		path: ':id',
+		component: ProfileComponent
 	}
 ];
 
@@ -23,4 +27,4 @@ const routes: Routes = [
 	],
 	declarations: [ProfileComponent]
 })
-export class ProfileModule {}
+export class ProfileModule { }
