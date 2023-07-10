@@ -8,12 +8,12 @@ export class ConfigService {
 
 	phoneMask = '+380 (00) 000-00-00';
 
-	_afterWhile: { [key: string]: ReturnType<typeof setTimeout> | undefined } =
-		{};
+	// _afterWhile: { [key: string]: ReturnType<typeof setTimeout> | undefined } =
+	// 	{};
 
-	afterWhile(key: string, cb = (): void => undefined, delay = 1000): void {
-		clearTimeout(this._afterWhile[key]);
+	// afterWhile(key: string, cb = (): void => undefined, delay = 1000): void {
+	// 	clearTimeout(this._afterWhile[key]);
 
-		this._afterWhile[key] = setTimeout(cb, delay);
-	}
+	// 	this._afterWhile[key] = setTimeout(cb, delay);
+	// }
 }
