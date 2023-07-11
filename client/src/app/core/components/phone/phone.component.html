@@ -2,6 +2,8 @@
 	<div *ngIf="label">{{label}}</div>
 
 	<input
+		[disabled]="disabled"
+		[class._disabled]="disabled"
 		[(ngModel)]="phone"
 		(ngModelChange)="phoneChange.emit($event)"
 		prefix="+38"

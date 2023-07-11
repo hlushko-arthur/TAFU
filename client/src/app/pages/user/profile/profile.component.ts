@@ -38,6 +38,8 @@ export class ProfileComponent implements OnInit {
 		console.log(this.userId);
 
 		this.user = await this.us.fetch(this.userId);
+
+		console.log(this.user);
 	}
 
 	ngOnInit(): void {
@@ -48,7 +50,7 @@ export class ProfileComponent implements OnInit {
 		const file = (event.target as HTMLInputElement)?.files?.[0];
 
 		if (file) {
-			this.us.uploadImage(file, type).then((resp) => {
+			this.us.uploadImage(file, type, this.user._id).then((resp) => {
 				this.us.user[type] = resp.data.filepath;
 
 				this.user[type] = resp.data.filepath;
@@ -76,6 +78,12 @@ export class ProfileComponent implements OnInit {
 
 			this.us.user = JSON.parse(JSON.stringify(this.user));
 		});
+	}
+
+	deleteFile(type: 'avatar' | 'document'): void {
+		this.user[type] = '';
+
+		this.us.update(this.user);
 	}
 
 	get isUserHasChanges(): boolean {

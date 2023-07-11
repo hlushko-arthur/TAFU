@@ -7,7 +7,7 @@ import { UserService } from 'src/app/core/services/user.service';
 	styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
-	constructor(public config: ConfigService, public us: UserService) { }
+	constructor(public config: ConfigService, public us: UserService) {}
 
 	ngOnInit(): void {
 		this.us.load();

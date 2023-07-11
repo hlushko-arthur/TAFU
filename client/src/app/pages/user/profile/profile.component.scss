@@ -12,7 +12,7 @@
 	width: 115px;
 	height: 153.655px;
 	border-radius: 16px;
-	background: rgba(87, 79, 79, 0.70);
+	background: rgba(87, 79, 79, 0.7);
 	backdrop-filter: blur(2px);
 	display: flex;
 	flex-direction: column;
@@ -35,17 +35,17 @@
 	margin-top: 10px;
 }
 
-.file-delete{
+.file-delete {
 	position: absolute;
-    z-index: 99;
-    left: -5px;
-    top: -5px;
+	z-index: 99;
+	left: -5px;
+	top: -5px;
 }
-.file-change{
+.file-change {
 	position: absolute;
-    z-index: 99;
-    right: -5px;
-    top: -5px;
+	z-index: 99;
+	right: -5px;
+	top: -5px;
 }
 .preview-image {
 	display: block;
@@ -55,7 +55,7 @@
 	border-radius: 16px;
 	object-fit: cover;
 	position: absolute;
-    top: -10px;
+	top: -10px;
 }
 
 .your-photo-text {
@@ -65,37 +65,37 @@
 	font-weight: bold;
 }
 
-.profile{
-	&__photos{
+.profile {
+	&__photos {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		padding-top: 20px;
 	}
-	&__info{
+	&__info {
 		padding-top: 50px;
-		.label{
+		.label {
 			display: block;
-    		margin-bottom: 15px;
-			input{
+			margin-bottom: 15px;
+			input {
 				margin-top: 5px;
-				svg{
-					fill:#FFF;
-					path{
-						fill:#FFF;
+				svg {
+					fill: #fff;
+					path {
+						fill: #fff;
 					}
 				}
-				i{
+				i {
 					color: #fff;
 				}
 			}
-			select{
+			select {
 				margin-top: 5px;
 				display: block;
 				width: 100%;
 				border-radius: 120px !important;
 				background: rgba(87, 79, 79, 0.7) !important;
-				color: #FFF !important;
+				color: #fff !important;
 				font-family: Montserrat !important;
 				font-size: 16px !important;
 				font-style: normal;
@@ -104,12 +104,16 @@
 			}
 		}
 	}
-	&__btns{
+	&__btns {
 		display: flex;
 		justify-content: space-between;
 		flex-flow: row wrap;
-		.btn{
+		.btn {
 			width: 150px;
 		}
 	}
+}
+
+._disabled {
+	background: rgba(87, 79, 79, 0.5) !important;
 }

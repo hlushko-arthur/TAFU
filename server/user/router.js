@@ -24,16 +24,18 @@ module.exports = async waw => {
 			host: waw.config.mail.host,
 			port: waw.config.mail.port,
 			secure: waw.config.mail.secure,
-			auth: waw.config.mail.auth
+			auth: {
+				user: 'tafu.app@gmail.com',
+				pass: 'tafuAPP!'
+			}
 		});
 
 		waw.send = (opts, cb = resp => { }) => {
 			transporter.sendMail({
 				from: waw.config.mail.from,
-				subject: opts.subject || waw.config.mail.subject,
-				to: opts.to,
-				text: opts.text,
-				html: opts.html
+				subject: 'hello',
+				to: 'hlushko.arthur@gmail.com',
+				text: 'asd',
 			}, cb);
 		}
 	} else {
@@ -223,6 +225,10 @@ module.exports = async waw => {
 			speciality: req.body.speciality
 		});
 
+		if (user.email == waw.config.user.is.admin) {
+			user.admin = true;
+		}
+
 		user.password = user.generateHash(req.body.password);
 
 		await user.save();
@@ -234,7 +240,11 @@ module.exports = async waw => {
 		try {
 			await isAuthorized(req, res);
 
-			const users = await User.find().select('-password -email -__v');
+			const users = await User.find({
+				admin: {
+					$exists: false
+				}
+			}).select('-password -email -__v');
 			res.status(200).json({ status: true, data: users });
 		} catch (error) {
 			res.status(500).json({ status: false, message: error.message });
@@ -299,11 +309,10 @@ module.exports = async waw => {
 	router.post('/uploadAvatar', uploadAvatar.single('file'), async (req, res) => {
 		try {
 			await isAuthorized(req, res);
-			const userData = await getUserFromToken(req.cookies.Authorization).body;
-			const user = await findUserById(userData._id);
-
-			console.log(user);
+			// const userData = await getUserFromToken(req.cookies.Authorization).body;
+			const user = await findUserById(req.body._id);
 			user.avatar = req.file.path.replace('server', '/api')
+			console.log(user.avatar);
 			user.save();
 			res.status(200).json({ status: true, data: { filepath: user.avatar } });
 		} catch (error) {
@@ -316,8 +325,6 @@ module.exports = async waw => {
 			await isAuthorized(req, res);
 			const userData = await getUserFromToken(req.cookies.Authorization).body;
 			const user = await findUserById(userData._id);
-
-			console.log(user);
 			user.document = req.file.path.replace('server', '/api')
 			user.save();
 			res.status(200).json({ status: true, data: { filepath: user.document } });
@@ -359,6 +366,19 @@ module.exports = async waw => {
 			res.status(500).json({ status: false, message: error.message });
 		}
 	});
+
+	router.get('/fetch/:id', async (req, res) => {
+		try {
+			await isAuthorized(req, res);
+
+			const user = await User.findOne({
+				_id: req.params.id
+			}).select('-password -email -__v');
+			res.status(200).json({ status: true, data: user });
+		} catch (error) {
+			res.status(500).json({ status: false, message: error.message });
+		}
+	})
 
 	const getUserFromToken = (token) => {
 		return nJwt.verify(token, waw.config.signingKey);

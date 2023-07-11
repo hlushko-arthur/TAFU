@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 // Core
 import { AuthenticatedGuard } from './core/guards/authenticated.guard';
 import { GuestGuard } from './core/guards/guest.guard';
-import { AdminsGuard } from './core/guards/admins.guard';
+import { AdminGuard } from './core/guards/admin.guard';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // config
@@ -64,6 +64,26 @@ const routes: Routes = [
 					)
 			}
 		]
+	},
+	{
+		path: 'admin',
+		canActivate: [AdminGuard],
+		component: FooterComponent,
+		children: [
+			{
+				path: 'tools',
+				// canActivate: [MetaGuard],
+				data: {
+					meta: {
+						title: 'Profile'
+					}
+				},
+				loadChildren: () =>
+					import('./pages/admin/admin-tools/admin-tools.module').then(
+						(m) => m.AdminToolsModule
+					)
+			}
+		]
 	}
 ];
 
@@ -97,7 +117,7 @@ const routes: Routes = [
 			preloadingStrategy: PreloadAllModules
 		})
 	],
-	providers: [AuthenticatedGuard, GuestGuard, AdminsGuard],
+	providers: [AuthenticatedGuard, GuestGuard, AdminGuard],
 	bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

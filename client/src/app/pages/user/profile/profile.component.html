@@ -8,36 +8,69 @@
 					class="file-input"
 					(change)="onFileUpload($event, 'avatar')"
 					accept="image/*"
+					#avatarUpload
 				/>
-				<div class="file-delete">
-					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M19.4494 16.7994L12.65 10L19.4494 3.20057C20.1835 2.46648 20.1835 1.28465 19.4494 0.550566C18.7153 -0.183522 17.5335 -0.183522 16.7994 0.550566L10 7.34999L3.20057 0.550566C2.46648 -0.183522 1.28465 -0.183522 0.550566 0.550566C-0.183522 1.28465 -0.183522 2.46648 0.550566 3.20057L7.34999 10L0.550566 16.7994C-0.183522 17.5335 -0.183522 18.7153 0.550566 19.4494C1.28465 20.1835 2.46648 20.1835 3.20057 19.4494L10 12.65L16.7994 19.4494C17.5335 20.1835 18.7153 20.1835 19.4494 19.4494C20.1783 18.7153 20.1783 17.5283 19.4494 16.7994Z" fill="white"/>
-					</svg>						
+				<div
+					*ngIf="us.user._id === user._id && user.avatar"
+					class="file-delete"
+					(click)="deleteFile('avatar')"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M19.4494 16.7994L12.65 10L19.4494 3.20057C20.1835 2.46648 20.1835 1.28465 19.4494 0.550566C18.7153 -0.183522 17.5335 -0.183522 16.7994 0.550566L10 7.34999L3.20057 0.550566C2.46648 -0.183522 1.28465 -0.183522 0.550566 0.550566C-0.183522 1.28465 -0.183522 2.46648 0.550566 3.20057L7.34999 10L0.550566 16.7994C-0.183522 17.5335 -0.183522 18.7153 0.550566 19.4494C1.28465 20.1835 2.46648 20.1835 3.20057 19.4494L10 12.65L16.7994 19.4494C17.5335 20.1835 18.7153 20.1835 19.4494 19.4494C20.1783 18.7153 20.1783 17.5283 19.4494 16.7994Z"
+							fill="white"
+						/>
+					</svg>
 				</div>
-				<div class="file-change">
-					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<!-- <div
+					*ngIf="us.user._id === user._id || user.document"
+					class="file-change"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
 						<g clip-path="url(#clip0_65_9)">
-						<path fill-rule="evenodd" clip-rule="evenodd" d="M0 15.7778V20H4.22222L16.4444 7.66667L12.2222 3.44444L0 15.7778ZM19.6667 4.44444C20.1111 4 20.1111 3.33333 19.6667 2.88889L17.1111 0.333333C16.6667 -0.111111 16 -0.111111 15.5556 0.333333L13.5556 2.33333L17.7778 6.55556L19.6667 4.44444Z" fill="white"/>
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M0 15.7778V20H4.22222L16.4444 7.66667L12.2222 3.44444L0 15.7778ZM19.6667 4.44444C20.1111 4 20.1111 3.33333 19.6667 2.88889L17.1111 0.333333C16.6667 -0.111111 16 -0.111111 15.5556 0.333333L13.5556 2.33333L17.7778 6.55556L19.6667 4.44444Z"
+								fill="white"
+							/>
 						</g>
 						<defs>
-						<clipPath id="clip0_65_9">
-						<rect width="20" height="20" fill="white"/>
-						</clipPath>
+							<clipPath id="clip0_65_9">
+								<rect width="20" height="20" fill="white" />
+							</clipPath>
 						</defs>
-					</svg>						
-				</div>
+					</svg>
+				</div> -->
 				<label for="uploadAvatar" class="file-label">
-					<span class="file-icon"><img src="assets/icons/photo.svg" alt=""></span>
-					<span class="file-text">Ваше фото</span>
+					<span class="file-icon"
+						><img src="assets/icons/photo.svg" alt=""
+					/></span>
+					<span *ngIf="!user.avatar" class="file-text"
+						>Ваше фото</span
+					>
 				</label>
 				<img
+					(click)="avatarUpload.click()"
 					*ngIf="user.avatar"
 					[src]="user.avatar"
 					alt="Preview"
 					class="preview-image"
 				/>
 			</div>
-	
+
 			<div class="file-upload">
 				<input
 					type="file"
@@ -45,60 +78,113 @@
 					class="file-input"
 					(change)="onFileUpload($event, 'document')"
 					accept="image/*"
+					#documentUpload
 				/>
-				<div class="file-delete">
-					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M19.4494 16.7994L12.65 10L19.4494 3.20057C20.1835 2.46648 20.1835 1.28465 19.4494 0.550566C18.7153 -0.183522 17.5335 -0.183522 16.7994 0.550566L10 7.34999L3.20057 0.550566C2.46648 -0.183522 1.28465 -0.183522 0.550566 0.550566C-0.183522 1.28465 -0.183522 2.46648 0.550566 3.20057L7.34999 10L0.550566 16.7994C-0.183522 17.5335 -0.183522 18.7153 0.550566 19.4494C1.28465 20.1835 2.46648 20.1835 3.20057 19.4494L10 12.65L16.7994 19.4494C17.5335 20.1835 18.7153 20.1835 19.4494 19.4494C20.1783 18.7153 20.1783 17.5283 19.4494 16.7994Z" fill="white"/>
-					</svg>						
+				<div
+					*ngIf="us.user._id === user._id && user.document"
+					(click)="deleteFile('document')"
+					class="file-delete"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M19.4494 16.7994L12.65 10L19.4494 3.20057C20.1835 2.46648 20.1835 1.28465 19.4494 0.550566C18.7153 -0.183522 17.5335 -0.183522 16.7994 0.550566L10 7.34999L3.20057 0.550566C2.46648 -0.183522 1.28465 -0.183522 0.550566 0.550566C-0.183522 1.28465 -0.183522 2.46648 0.550566 3.20057L7.34999 10L0.550566 16.7994C-0.183522 17.5335 -0.183522 18.7153 0.550566 19.4494C1.28465 20.1835 2.46648 20.1835 3.20057 19.4494L10 12.65L16.7994 19.4494C17.5335 20.1835 18.7153 20.1835 19.4494 19.4494C20.1783 18.7153 20.1783 17.5283 19.4494 16.7994Z"
+							fill="white"
+						/>
+					</svg>
 				</div>
-				<div class="file-change">
-					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<!-- <div class="file-change">
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 20 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
 						<g clip-path="url(#clip0_65_9)">
-						<path fill-rule="evenodd" clip-rule="evenodd" d="M0 15.7778V20H4.22222L16.4444 7.66667L12.2222 3.44444L0 15.7778ZM19.6667 4.44444C20.1111 4 20.1111 3.33333 19.6667 2.88889L17.1111 0.333333C16.6667 -0.111111 16 -0.111111 15.5556 0.333333L13.5556 2.33333L17.7778 6.55556L19.6667 4.44444Z" fill="white"/>
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M0 15.7778V20H4.22222L16.4444 7.66667L12.2222 3.44444L0 15.7778ZM19.6667 4.44444C20.1111 4 20.1111 3.33333 19.6667 2.88889L17.1111 0.333333C16.6667 -0.111111 16 -0.111111 15.5556 0.333333L13.5556 2.33333L17.7778 6.55556L19.6667 4.44444Z"
+								fill="white"
+							/>
 						</g>
 						<defs>
-						<clipPath id="clip0_65_9">
-						<rect width="20" height="20" fill="white"/>
-						</clipPath>
+							<clipPath id="clip0_65_9">
+								<rect width="20" height="20" fill="white" />
+							</clipPath>
 						</defs>
-					</svg>						
-				</div>
+					</svg>
+				</div> -->
 				<label for="uploadDocument" class="file-label">
-					<span class="file-icon"><img src="assets/icons/photo.svg" alt=""></span>
-					<span class="file-text">Ваші документи</span>
+					<span class="file-icon"
+						><img src="assets/icons/photo.svg" alt=""
+					/></span>
+					<span *ngIf="!user.document" class="file-text"
+						>Ваші документи</span
+					>
 				</label>
 				<img
 					*ngIf="user.document"
 					[src]="user.document"
 					alt="Preview"
 					class="preview-image"
+					(click)="documentUpload.click()"
 				/>
 			</div>
 		</div>
-	
+
 		<div class="profile__info">
 			<label class="label">
 				ПІБ
-				<input type="text" [(ngModel)]="user.fullName" />
+				<input
+					[disabled]="us.user._id !== user._id"
+					[class._disabled]="us.user._id !== user._id"
+					type="text"
+					[(ngModel)]="user.fullName"
+				/>
 			</label>
-	
+
 			<label class="label">
-				<phone label="Номер телефону" [(phone)]="user.phone"></phone>
+				<phone
+					[disabled]="us.user._id !== user._id"
+					label="Номер телефону"
+					[(phone)]="user.phone"
+				></phone>
 			</label>
-	
+
 			<label class="label">
 				Місто
-				<input type="text" [(ngModel)]="user.city" />
+				<input
+					[disabled]="us.user._id !== user._id"
+					[class._disabled]="us.user._id !== user._id"
+					type="text"
+					[(ngModel)]="user.city"
+				/>
 			</label>
-	
+
 			<label class="label">
 				Адреса
-				<input type="text" [(ngModel)]="user.address" />
+				<input
+					[disabled]="us.user._id !== user._id"
+					[class._disabled]="us.user._id !== user._id"
+					type="text"
+					[(ngModel)]="user.address"
+				/>
 			</label>
-	
+
 			<label class="label">
 				Спеціалізація
-				<select [(ngModel)]="user.speciality">
+				<select
+					[disabled]="us.user._id !== user._id"
+					[class._disabled]="us.user._id !== user._id"
+					[(ngModel)]="user.speciality"
+				>
 					<option [value]="undefined">Не вибрано</option>
 					<option
 						*ngFor="let speciality of config.specialities"
@@ -108,23 +194,34 @@
 					</option>
 				</select>
 			</label>
-	
+
 			<label class="label">
 				Дата народження
-				<input type="date" [(ngModel)]="user.birthday" />
+				<input
+					[disabled]="us.user._id !== user._id"
+					[class._disabled]="us.user._id !== user._id"
+					type="date"
+					[(ngModel)]="user.birthday"
+				/>
 				<!-- <date-picker
 					[date]="user.birthday || ''"
 					(dateChange)="user.birthday = $even
 				></date-picker> -->
 			</label>
-	
+
 			<div class="profile__btns">
-				<div class="profile__logout">
+				<div *ngIf="us.user._id === user._id" class="profile__logout">
 					<button (click)="us.logout()" class="btn">Logout</button>
 				</div>
-				
-				<div class="profile__logout">
-					<button [disabled]="isUserHasChanges" (click)="updateUser()" class="btn">Save</button>
+
+				<div *ngIf="us.user._id === user._id" class="profile__logout">
+					<button
+						[disabled]="isUserHasChanges"
+						(click)="updateUser()"
+						class="btn"
+					>
+						Save
+					</button>
 				</div>
 			</div>
 		</div>

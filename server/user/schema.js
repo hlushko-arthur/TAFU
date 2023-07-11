@@ -7,6 +7,7 @@ const schema = mongoose.Schema({
 	birthday: String,
 	city: String,
 	phone: String,
+	admin: Boolean,
 	avatar: { type: String, default: '/assets/default.png' },
 	document: String,
 	password: String,

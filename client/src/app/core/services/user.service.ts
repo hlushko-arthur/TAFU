@@ -49,9 +49,7 @@ export class UserService {
 		let user = {} as User;
 
 		await this._http
-			.post('/api/user/fetch', {
-				_id
-			})
+			.get(`/api/user/fetch/${_id}`)
 			.then((resp: ServerResponse) => {
 				user = resp.data as User;
 			});
@@ -110,12 +108,18 @@ export class UserService {
 			.catch(this._handleError);
 	}
 
-	async uploadImage(file: File, type: 'avatar' | 'document'): Promise<any> {
+	async uploadImage(
+		file: File,
+		type: 'avatar' | 'document',
+		userId: string
+	): Promise<any> {
 		const formData: FormData = new FormData();
 
 		formData.append('file', file, file.name);
 
 		formData.append('type', type);
+
+		formData.append('_id', userId);
 
 		return await new Promise((resolve, reject) => {
 			this._http

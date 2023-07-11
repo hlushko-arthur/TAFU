@@ -1,11 +1,16 @@
 <div class="wrapper">
 	<div class="main__top">
 		<div class="specialities main__specialities">
-			<div *ngFor="let speciality of config.specialities" class="main__specialities-item">{{speciality}}</div>
+			<div
+				*ngFor="let speciality of config.specialities"
+				class="main__specialities-item"
+			>
+				{{speciality}}
+			</div>
 		</div>
-	
-		<div class="main__find" >
-			<img src="assets/icons/find.svg" alt="">
+
+		<div class="main__find">
+			<img src="assets/icons/find.svg" alt="" />
 			<input type="text" placeholder="Пошук..." />
 		</div>
 	</div>
@@ -16,28 +21,24 @@
 				<img [src]="user.avatar" alt="" />
 			</div>
 
-			<div class="list__info">
+			<div [routerLink]="'/user/profile/' + user._id" class="list__info">
 				<div class="list__info-wrap">
 					<div class="list__info-img">
-						<img src="assets/icons/user.svg" alt="">
+						<img src="assets/icons/user.svg" alt="" />
 					</div>
-					<div class="list__info-text">
-						{{user.fullName}}
-					</div>
+					<div class="list__info-text">{{user.fullName}}</div>
 				</div>
 
 				<div class="list__info-wrap">
 					<div class="list__info-img">
-						<img src="assets/icons/phone.svg" alt="">
+						<img src="assets/icons/phone.svg" alt="" />
 					</div>
-					<div class="list__info-text">
-						{{user.phone}}
-					</div>
+					<div class="list__info-text">{{user.phone}}</div>
 				</div>
 
 				<div class="list__info-wrap">
 					<div class="list__info-img">
-						<img src="assets/icons/loc.svg" alt="">
+						<img src="assets/icons/loc.svg" alt="" />
 					</div>
 					<div class="list__info-text">
 						{{user.city}}, {{user.address}}

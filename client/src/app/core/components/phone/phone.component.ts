@@ -10,6 +10,8 @@ export class PhoneComponent {
 
 	@Input() phone = '';
 
+	@Input() disabled: boolean;
+
 	@Output() phoneChange = new EventEmitter<string>();
 
 	constructor() {}
