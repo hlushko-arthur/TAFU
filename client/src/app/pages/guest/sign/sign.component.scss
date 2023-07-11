@@ -2,3 +2,48 @@
 	display: flex;
 	flex-direction: column;
 }
+.reg-item{
+	padding: 0 15px;
+}
+.reg-wrap{
+	position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.login{
+	&__title{
+		text-align: center;
+		padding-bottom: 25px;
+		p{
+			color: #92AC51;
+			font-size: 24px;
+			font-weight: 700;
+			padding-bottom: 5px;
+		}
+		span{
+			font-size: 18px;
+			font-weight: 300;
+			display: block;
+		}
+	}
+	&__input{
+		position: relative;
+		margin-bottom: 12px;
+		img{
+			position: absolute;
+			z-index: 1;
+			left: 15px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+		input{
+			padding: 15px 15px 15px 53px;
+		}
+	}
+	&__forgot{
+		display: flex;
+    	justify-content: space-between;
+		padding-top: 10px;
+	}
+}
