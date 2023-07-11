@@ -97,3 +97,9 @@ input{
     font-size: 22px;
     font-weight: 700;
 }
+
+.wrapper{
+    height: calc( 100vh - 90px );
+    overflow: scroll;
+    padding: 0 15px;
+}
