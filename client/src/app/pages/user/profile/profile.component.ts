@@ -11,7 +11,11 @@ import { UserService } from 'src/app/core/services/user.service';
 export class ProfileComponent implements OnInit {
 	user: User = {} as User;
 
+	oldUser: User = {} as User;
+
 	isHttpLoading = false;
+
+	isEditingEnabled = false;
 
 	userId: string;
 
@@ -28,6 +32,8 @@ export class ProfileComponent implements OnInit {
 		this.userId = this._activatedRoute.snapshot.params['id'];
 
 		if (!this.userId) {
+			console.log(this.us.user._id);
+
 			this.userId = this.us.user._id;
 
 			this._router.navigate([`/user/profile/${this.userId}`]);
@@ -38,8 +44,6 @@ export class ProfileComponent implements OnInit {
 		console.log(this.userId);
 
 		this.user = await this.us.fetch(this.userId);
-
-		console.log(this.user);
 	}
 
 	ngOnInit(): void {
@@ -73,10 +77,16 @@ export class ProfileComponent implements OnInit {
 	updateUser(): void {
 		this.isHttpLoading = true;
 
+		this.isEditingEnabled = false;
+
 		this.us.update(this.user).then(() => {
 			console.log('then');
 
-			this.us.user = JSON.parse(JSON.stringify(this.user));
+			if (this.user._id === this.us.user._id) {
+				this.us.user = JSON.parse(JSON.stringify(this.user));
+
+				localStorage.setItem('user', JSON.stringify(this.user));
+			}
 		});
 	}
 
@@ -86,7 +96,28 @@ export class ProfileComponent implements OnInit {
 		this.us.update(this.user);
 	}
 
+	startEditing(): void {
+		this.oldUser = JSON.parse(JSON.stringify(this.user));
+
+		this.isEditingEnabled = true;
+	}
+
+	cancelEditing(): void {
+		const user = JSON.parse(JSON.stringify(this.oldUser));
+
+		this.user = user;
+
+		this.isEditingEnabled = false;
+	}
+
 	get isUserHasChanges(): boolean {
 		return JSON.stringify(this.us.user) === JSON.stringify(this.user);
+	}
+
+	get isUserCanEdit(): boolean {
+		return !(
+			(this.us.user.admin && this.isEditingEnabled) ||
+			this.us.user._id === this.user._id
+		);
 	}
 }

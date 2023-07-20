@@ -9,4 +9,5 @@ export interface User {
 	fullName: string;
 	email: string;
 	speciality: string;
+	admin?: boolean;
 }

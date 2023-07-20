@@ -28,32 +28,6 @@
 						/>
 					</svg>
 				</div>
-				<!-- <div
-					*ngIf="us.user._id === user._id || user.document"
-					class="file-change"
-				>
-					<svg
-						width="20"
-						height="20"
-						viewBox="0 0 20 20"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<g clip-path="url(#clip0_65_9)">
-							<path
-								fill-rule="evenodd"
-								clip-rule="evenodd"
-								d="M0 15.7778V20H4.22222L16.4444 7.66667L12.2222 3.44444L0 15.7778ZM19.6667 4.44444C20.1111 4 20.1111 3.33333 19.6667 2.88889L17.1111 0.333333C16.6667 -0.111111 16 -0.111111 15.5556 0.333333L13.5556 2.33333L17.7778 6.55556L19.6667 4.44444Z"
-								fill="white"
-							/>
-						</g>
-						<defs>
-							<clipPath id="clip0_65_9">
-								<rect width="20" height="20" fill="white" />
-							</clipPath>
-						</defs>
-					</svg>
-				</div> -->
 				<label for="uploadAvatar" class="file-label">
 					<span class="file-icon"
 						><img src="assets/icons/photo.svg" alt=""
@@ -98,29 +72,6 @@
 						/>
 					</svg>
 				</div>
-				<!-- <div class="file-change">
-					<svg
-						width="20"
-						height="20"
-						viewBox="0 0 20 20"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<g clip-path="url(#clip0_65_9)">
-							<path
-								fill-rule="evenodd"
-								clip-rule="evenodd"
-								d="M0 15.7778V20H4.22222L16.4444 7.66667L12.2222 3.44444L0 15.7778ZM19.6667 4.44444C20.1111 4 20.1111 3.33333 19.6667 2.88889L17.1111 0.333333C16.6667 -0.111111 16 -0.111111 15.5556 0.333333L13.5556 2.33333L17.7778 6.55556L19.6667 4.44444Z"
-								fill="white"
-							/>
-						</g>
-						<defs>
-							<clipPath id="clip0_65_9">
-								<rect width="20" height="20" fill="white" />
-							</clipPath>
-						</defs>
-					</svg>
-				</div> -->
 				<label for="uploadDocument" class="file-label">
 					<span class="file-icon"
 						><img src="assets/icons/photo.svg" alt=""
@@ -139,12 +90,32 @@
 			</div>
 		</div>
 
+		<div *ngIf="us.user.admin && us.user._id !== user._id">
+			<button
+				*ngIf="!isEditingEnabled"
+				(click)="startEditing()"
+				class="btn"
+			>
+				Edit
+			</button>
+			<button
+				*ngIf="isEditingEnabled"
+				(click)="cancelEditing()"
+				class="btn"
+			>
+				Cancel
+			</button>
+			<button *ngIf="isEditingEnabled" (click)="updateUser()" class="btn">
+				Save
+			</button>
+		</div>
+
 		<div class="profile__info">
 			<label class="label">
 				ПІБ
 				<input
-					[disabled]="us.user._id !== user._id"
-					[class._disabled]="us.user._id !== user._id"
+					[disabled]="isUserCanEdit"
+					[class._disabled]="isUserCanEdit"
 					type="text"
 					[(ngModel)]="user.fullName"
 				/>
@@ -152,7 +123,7 @@
 
 			<label class="label">
 				<phone
-					[disabled]="us.user._id !== user._id"
+					[disabled]="isUserCanEdit"
 					label="Номер телефону"
 					[(phone)]="user.phone"
 				></phone>
@@ -161,8 +132,8 @@
 			<label class="label">
 				Місто
 				<input
-					[disabled]="us.user._id !== user._id"
-					[class._disabled]="us.user._id !== user._id"
+					[disabled]="isUserCanEdit"
+					[class._disabled]="isUserCanEdit"
 					type="text"
 					[(ngModel)]="user.city"
 				/>
@@ -171,8 +142,8 @@
 			<label class="label">
 				Адреса
 				<input
-					[disabled]="us.user._id !== user._id"
-					[class._disabled]="us.user._id !== user._id"
+					[disabled]="isUserCanEdit"
+					[class._disabled]="isUserCanEdit"
 					type="text"
 					[(ngModel)]="user.address"
 				/>
@@ -181,8 +152,8 @@
 			<label class="label">
 				Спеціалізація
 				<select
-					[disabled]="us.user._id !== user._id"
-					[class._disabled]="us.user._id !== user._id"
+					[disabled]="isUserCanEdit"
+					[class._disabled]="isUserCanEdit"
 					[(ngModel)]="user.speciality"
 				>
 					<option [value]="undefined">Не вибрано</option>
@@ -198,8 +169,8 @@
 			<label class="label">
 				Дата народження
 				<input
-					[disabled]="us.user._id !== user._id"
-					[class._disabled]="us.user._id !== user._id"
+					[disabled]="isUserCanEdit"
+					[class._disabled]="isUserCanEdit"
 					type="date"
 					[(ngModel)]="user.birthday"
 				/>

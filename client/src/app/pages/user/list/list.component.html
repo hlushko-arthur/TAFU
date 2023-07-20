@@ -16,12 +16,16 @@
 	</div>
 
 	<div class="list">
-		<div class="list__wrap" *ngFor="let user of us.users">
+		<div
+			[routerLink]="'/user/profile/' + user._id"
+			class="list__wrap"
+			*ngFor="let user of us.users"
+		>
 			<div class="list__img">
 				<img [src]="user.avatar" alt="" />
 			</div>
 
-			<div [routerLink]="'/user/profile/' + user._id" class="list__info">
+			<div class="list__info">
 				<div class="list__info-wrap">
 					<div class="list__info-img">
 						<img src="assets/icons/user.svg" alt="" />

@@ -94,8 +94,6 @@ export class UserService {
 			.post('/api/user/update', user)
 			.then((resp: ServerResponse | ServerResponseError) => {
 				if (resp.status) {
-					localStorage.setItem('user', JSON.stringify(user));
-
 					this._alert.destroy();
 
 					this._alert.success({
@@ -152,6 +150,8 @@ export class UserService {
 		document.cookie = cookieValue;
 
 		delete user.token;
+
+		this.user = user;
 
 		localStorage.setItem('user', JSON.stringify(user));
 
