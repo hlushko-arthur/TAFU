@@ -54,8 +54,6 @@ export class UserService {
 				user = resp.data as User;
 			});
 
-		console.log(user);
-
 		return user;
 	}
 

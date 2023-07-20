@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/core/interfaces/user.interface';
 import { ConfigService } from 'src/app/core/services/config.service';
@@ -8,7 +9,7 @@ import { UserService } from 'src/app/core/services/user.service';
 	templateUrl: './profile.component.html',
 	styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 	user: User = {} as User;
 
 	oldUser: User = {} as User;
@@ -23,25 +24,40 @@ export class ProfileComponent implements OnInit {
 		public us: UserService,
 		public config: ConfigService,
 		private _router: Router,
-		private _activatedRoute: ActivatedRoute
+		private _activatedRoute: ActivatedRoute,
+		private _location: Location
 	) {
+		this.userId = this._activatedRoute.snapshot.params['id'];
+
+		this._location.onUrlChange((url) => {
+			if (url.startsWith('/user/profile/')) {
+				const userId = url.split('/')[3];
+
+				if (userId !== this.userId) {
+					this.userId = userId;
+
+					this.loadUser();
+
+					return;
+				}
+			}
+		});
+
 		this.loadUser();
 	}
 
+	ngOnDestroy(): void {
+		this._location.ngOnDestroy();
+	}
+
 	async loadUser(): Promise<void> {
-		this.userId = this._activatedRoute.snapshot.params['id'];
-
 		if (!this.userId) {
-			console.log(this.us.user._id);
-
 			this.userId = this.us.user._id;
 
 			this._router.navigate([`/user/profile/${this.userId}`]);
 
 			return;
 		}
-
-		console.log(this.userId);
 
 		this.user = await this.us.fetch(this.userId);
 	}
@@ -80,8 +96,6 @@ export class ProfileComponent implements OnInit {
 		this.isEditingEnabled = false;
 
 		this.us.update(this.user).then(() => {
-			console.log('then');
-
 			if (this.user._id === this.us.user._id) {
 				this.us.user = JSON.parse(JSON.stringify(this.user));
 

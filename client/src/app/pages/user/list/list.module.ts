@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListComponent } from './list.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SearchPipe } from 'src/app/core/pipes/search.pipe';
+import { CoreModule } from 'src/app/core/core.module';
 
 const routes: Routes = [
 	{
@@ -12,7 +14,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-	imports: [CommonModule, FormsModule, RouterModule.forChild(routes)],
+	imports: [
+		CoreModule,
+		CommonModule,
+		FormsModule,
+		RouterModule.forChild(routes)
+	],
 	declarations: [ListComponent]
 })
-export class ListModule { }
+export class ListModule {}

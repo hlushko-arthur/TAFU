@@ -3,6 +3,7 @@
 		<div class="profile__photos">
 			<div class="file-upload">
 				<input
+					[disabled]="us.user._id !== user._id"
 					type="file"
 					id="uploadAvatar"
 					class="file-input"
@@ -47,6 +48,7 @@
 
 			<div class="file-upload">
 				<input
+					[disabled]="us.user._id !== user._id"
 					type="file"
 					id="uploadDocument"
 					class="file-input"
@@ -88,26 +90,6 @@
 					(click)="documentUpload.click()"
 				/>
 			</div>
-		</div>
-
-		<div *ngIf="us.user.admin && us.user._id !== user._id">
-			<button
-				*ngIf="!isEditingEnabled"
-				(click)="startEditing()"
-				class="btn"
-			>
-				Edit
-			</button>
-			<button
-				*ngIf="isEditingEnabled"
-				(click)="cancelEditing()"
-				class="btn"
-			>
-				Cancel
-			</button>
-			<button *ngIf="isEditingEnabled" (click)="updateUser()" class="btn">
-				Save
-			</button>
 		</div>
 
 		<div class="profile__info">
@@ -180,7 +162,7 @@
 				></date-picker> -->
 			</label>
 
-			<div class="profile__btns">
+			<div *ngIf="us.user._id === user._id" class="profile__btns">
 				<div *ngIf="us.user._id === user._id" class="profile__logout">
 					<button (click)="us.logout()" class="btn">Logout</button>
 				</div>
@@ -194,6 +176,30 @@
 						Save
 					</button>
 				</div>
+			</div>
+
+			<div *ngIf="us.user.admin && us.user._id !== user._id">
+				<button
+					*ngIf="!isEditingEnabled"
+					(click)="startEditing()"
+					class="btn"
+				>
+					Edit
+				</button>
+				<button
+					*ngIf="isEditingEnabled"
+					(click)="cancelEditing()"
+					class="btn"
+				>
+					Cancel
+				</button>
+				<button
+					*ngIf="isEditingEnabled"
+					(click)="updateUser()"
+					class="btn"
+				>
+					Save
+				</button>
 			</div>
 		</div>
 	</div>

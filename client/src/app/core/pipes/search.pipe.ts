@@ -1,14 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { User } from '../interfaces/user.interface';
 
 @Pipe({
 	name: 'search'
 })
 export class SearchPipe implements PipeTransform {
-	transform(
-		array: { [key: string]: any }[],
-		search: string,
-		keys?: string[]
-	): unknown[] {
+	transform(array: User[], search: string, keys?: string[]): User[] {
 		if (!array || !search) {
 			return array;
 		}
@@ -19,7 +16,7 @@ export class SearchPipe implements PipeTransform {
 
 		return array.filter((item) => {
 			return keys?.some((key: string) => {
-				const propertyValue = item[key];
+				const propertyValue = item[key as keyof User];
 
 				if (propertyValue && typeof propertyValue === 'string') {
 					return propertyValue

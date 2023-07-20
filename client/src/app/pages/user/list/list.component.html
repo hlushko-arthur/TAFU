@@ -4,6 +4,8 @@
 			<div
 				*ngFor="let speciality of config.specialities"
 				class="main__specialities-item"
+				[class.active]="selectedSpeciality === speciality"
+				(click)="selectSpeciality(speciality)"
 			>
 				{{speciality}}
 			</div>
@@ -11,7 +13,7 @@
 
 		<div class="main__find">
 			<img src="assets/icons/find.svg" alt="" />
-			<input type="text" placeholder="Пошук..." />
+			<input [(ngModel)]="search" type="text" placeholder="Пошук..." />
 		</div>
 	</div>
 
@@ -19,7 +21,7 @@
 		<div
 			[routerLink]="'/user/profile/' + user._id"
 			class="list__wrap"
-			*ngFor="let user of us.users"
+			*ngFor="let user of us.users | search: search | search: selectedSpeciality: ['speciality']"
 		>
 			<div class="list__img">
 				<img [src]="user.avatar" alt="" />
