@@ -3,7 +3,7 @@
 		<div class="profile__photos">
 			<div class="file-upload">
 				<input
-					[disabled]="us.user._id !== user._id"
+					[disabled]="isUserCanEdit"
 					type="file"
 					id="uploadAvatar"
 					class="file-input"
@@ -12,7 +12,7 @@
 					#avatarUpload
 				/>
 				<div
-					*ngIf="us.user._id === user._id && user.avatar"
+					*ngIf="user.avatar && !isUserCanEdit"
 					class="file-delete"
 					(click)="deleteFile('avatar')"
 				>
@@ -48,7 +48,7 @@
 
 			<div class="file-upload">
 				<input
-					[disabled]="us.user._id !== user._id"
+					[disabled]="isUserCanEdit"
 					type="file"
 					id="uploadDocument"
 					class="file-input"
@@ -57,7 +57,7 @@
 					#documentUpload
 				/>
 				<div
-					*ngIf="us.user._id === user._id && user.document"
+					*ngIf="user.document && !isUserCanEdit"
 					(click)="deleteFile('document')"
 					class="file-delete"
 				>
@@ -184,21 +184,21 @@
 					(click)="startEditing()"
 					class="btn"
 				>
-					Edit
+					Редагувати
 				</button>
 				<button
 					*ngIf="isEditingEnabled"
 					(click)="cancelEditing()"
 					class="btn"
 				>
-					Cancel
+					Відмінити
 				</button>
 				<button
 					*ngIf="isEditingEnabled"
 					(click)="updateUser()"
 					class="btn"
 				>
-					Save
+					Зберегти
 				</button>
 			</div>
 		</div>

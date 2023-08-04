@@ -104,6 +104,55 @@ export class UserService {
 			.catch(this._handleError);
 	}
 
+	resetPassword(email: string): void {
+		this._http
+			.post('api/user/resetPassword', {
+				email
+			})
+			.then(
+				(resp) => {
+					if (resp) {
+						this._alert.info({
+							text: `Код надісланий на пошту ${email}`
+						});
+					}
+				},
+				() => {
+					this._alert.error({
+						text: 'Щось пішло не так, спробуйте пізніше'
+					});
+				}
+			);
+	}
+
+	async checkResetPin(email: string, resetPin: string): Promise<boolean> {
+		return await this._http
+			.post('api/user/checkResetPin', {
+				email,
+				resetPin
+			})
+			.then((resp) => {
+				return resp as boolean;
+			})
+			.catch(() => {
+				return false;
+			});
+	}
+
+	async changePassword(email: string, password: string): Promise<boolean> {
+		return await this._http
+			.post('api/user/changePassword', {
+				email,
+				password
+			})
+			.then((resp) => {
+				return resp as boolean;
+			})
+			.catch(() => {
+				return false;
+			});
+	}
+
 	async uploadImage(
 		file: File,
 		type: 'avatar' | 'document',

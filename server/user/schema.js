@@ -11,6 +11,7 @@ const schema = mongoose.Schema({
 	avatar: { type: String, default: '/assets/default.png' },
 	document: String,
 	password: String,
+	resetPin: String
 }, {
 	minimize: false
 });

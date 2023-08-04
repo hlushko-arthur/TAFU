@@ -26,14 +26,11 @@
 		}
 	},
 	"mail": {
-		"host": "smtp-relay.brevo.com",
-		"port": 587,
 		"secure": false,
-		"apiKey": "'AIzaSyAI5geMFK5UO4ncMPPMrVRPhSGPJoPC9zw'",
 		"from": "tafu.app@gmail.com",
 		"auth": {
 			"user": "tafu.app@gmail.com",
-			"pass": "tafuAPP!"
+			"pass": "dujeqdjggiumczct"
 		}
 	}
 }

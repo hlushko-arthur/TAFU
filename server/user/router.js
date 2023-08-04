@@ -21,21 +21,21 @@ module.exports = async waw => {
 		const nodemailer = require("nodemailer");
 
 		let transporter = nodemailer.createTransport({
-			host: waw.config.mail.host,
-			port: waw.config.mail.port,
 			secure: waw.config.mail.secure,
+			service: 'Gmail',
 			auth: {
-				user: 'tafu.app@gmail.com',
-				pass: 'tafuAPP!'
+				user: waw.config.mail.auth.user,
+				pass: waw.config.mail.auth.pass
 			}
 		});
 
 		waw.send = (opts, cb = resp => { }) => {
 			transporter.sendMail({
 				from: waw.config.mail.from,
-				subject: 'hello',
-				to: 'hlushko.arthur@gmail.com',
-				text: 'asd',
+				subject: opts.subject,
+				to: opts.to,
+				text: opts.text,
+				html: opts.html
 			}, cb);
 		}
 	} else {
@@ -114,18 +114,18 @@ module.exports = async waw => {
 	const new_pin = async (user, cb = () => { }) => {
 		user.resetPin = Math.floor(Math.random() * (999999 - 100000)) + 100000;
 
-		user.markModified('data');
+		user.markModified('resetPin');
 
 		await user.save();
 
 		waw.send({
 			to: user.email,
-			subject: 'Code: ' + user.resetPin,
-			html: 'Code: ' + user.resetPin
+			subject: 'TAFU | Відновлення паролю',
+			html: 'Для відновлення паролю введіть цей код: ' + user.resetPin
 		}, cb);
 	}
 
-	router.post("/request", async (req, res) => {
+	router.post("/resetPassword", async (req, res) => {
 		const user = await findUser(req.body.email);
 
 		if (user) {
@@ -135,10 +135,20 @@ module.exports = async waw => {
 		res.json(true);
 	});
 
-	router.post("/change", async (req, res) => {
+	router.post("/checkResetPin", async (req, res) => {
 		const user = await findUser(req.body.email);
 
-		if (user && user.resetPin === req.body.pin) {
+		if (user && user.resetPin === req.body.resetPin) {
+			res.json(true)
+		} else {
+			res.json(false)
+		}
+	})
+
+	router.post("/changePassword", async (req, res) => {
+		const user = await findUser(req.body.email);
+
+		if (user) {
 			user.password = user.generateHash(req.body.password);
 
 			delete user.resetPin;
@@ -146,10 +156,8 @@ module.exports = async waw => {
 			await user.save();
 
 			res.json(true);
-		} else if (user) {
-			new_pin(user, () => {
-				res.json(false);
-			});
+		} else {
+			res.json(false);
 		}
 	});
 
@@ -312,7 +320,6 @@ module.exports = async waw => {
 			// const userData = await getUserFromToken(req.cookies.Authorization).body;
 			const user = await findUserById(req.body._id);
 			user.avatar = req.file.path.replace('server', '/api')
-			console.log(user.avatar);
 			user.save();
 			res.status(200).json({ status: true, data: { filepath: user.avatar } });
 		} catch (error) {

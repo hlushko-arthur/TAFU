@@ -2,62 +2,161 @@
 	<div class="reg-wrap">
 		<div class="reg-item">
 			<div class="login__title">
-				<p>{{activeForm === 'login' ? 'Вхід' : 'Реєстрація'}}</p>
-				<span>Введіть ваші дані для подальшої роботи</span>
+				<p *ngIf="activeForm !== 'reset'">
+					{{activeForm === 'login' ? 'Вхід' : 'Реєстрація'}}
+				</p>
+				<p
+					*ngIf="activeForm === 'reset' || activeForm === 'newPassword'"
+				>
+					Відновлення паролю
+				</p>
+				<span *ngIf="activeForm !== 'reset'"
+					>Введіть ваші дані для подальшої роботи</span
+				>
+				<span
+					*ngIf="activeForm === 'reset' || activeForm === 'newPassword'"
+					>Пошта: {{user.email}}</span
+				>
 			</div>
-		
+
 			<div *ngIf="activeForm === 'login'" class="login-form">
 				<div class="login__input">
-					<img src="assets/icons/name.svg" alt="">
-					<input placeholder="Введіть ваш E-mail" [(ngModel)]="user.email" type="email" />
+					<img src="assets/icons/name.svg" alt="" />
+					<input
+						placeholder="Введіть ваш E-mail"
+						[(ngModel)]="user.email"
+						type="email"
+					/>
 				</div>
 				<div class="login__input">
-					<img src="assets/icons/pass.svg" alt="">
-					<input placeholder="Введіть ваш пароль" [(ngModel)]="user.password" type="password" />
+					<img src="assets/icons/pass.svg" alt="" />
+					<input
+						placeholder="Введіть ваш пароль"
+						[(ngModel)]="user.password"
+						type="password"
+					/>
 				</div>
 				<div class="login__btn">
-					<button [disabled]="isLoginButtonDisabled" (click)="login()" class="btn">
+					<button
+						[disabled]="isLoginButtonDisabled"
+						(click)="login()"
+						class="btn"
+					>
 						Увійти
 					</button>
 				</div>
-		
+
 				<div class="login__forgot">
-					<span (click)="activeForm = 'sign'"
-						>Зареєструватись</span
-					>
-					<span>Забув пароль</span>
+					<span (click)="activeForm = 'sign'">Зареєструватись</span>
+					<span (click)="resetPassword()">Забув пароль</span>
 				</div>
 			</div>
-		
+
 			<div *ngIf="activeForm === 'sign'" class="sign-form">
 				<div class="login__input">
-					<img src="assets/icons/name.svg" alt="">
-					<input placeholder="Введіть ваш E-mail" [(ngModel)]="user.email" type="email" />
+					<img src="assets/icons/name.svg" alt="" />
+					<input
+						placeholder="Введіть ваш E-mail"
+						[(ngModel)]="user.email"
+						type="email"
+					/>
 				</div>
-	
+
 				<div class="login__input">
-					<img src="assets/icons/pass.svg" alt="">
-					<input placeholder="Введіть ваш пароль" [(ngModel)]="user.password" type="password" />
+					<img src="assets/icons/pass.svg" alt="" />
+					<input
+						placeholder="Введіть ваш пароль"
+						[(ngModel)]="user.password"
+						type="password"
+					/>
 				</div>
-	
+
 				<div class="login__input">
-					<img src="assets/icons/pass.svg" alt="">
-					<input placeholder="Повторіть пароль" [(ngModel)]="user.passwordCheck" type="password" />
+					<img src="assets/icons/pass.svg" alt="" />
+					<input
+						placeholder="Повторіть пароль"
+						[(ngModel)]="user.passwordCheck"
+						type="password"
+					/>
 				</div>
-		
+
 				<div class="login__btn">
-					<button [disabled]="isSignButtonDisabled" (click)="signup()" class="btn">
+					<button
+						[disabled]="isSignButtonDisabled"
+						(click)="signup()"
+						class="btn"
+					>
 						Зареєструватись
 					</button>
 				</div>
-		
+
 				<div class="login__forgot">
-					<span (click)="activeForm = 'login'">Вже є аккаунт, увійти</span>
-					<span>Забув пароль</span>
+					<span (click)="activeForm = 'login'"
+						>Вже є аккаунт, увійти</span
+					>
+					<span (click)="resetPassword()">Забув пароль</span>
+				</div>
+			</div>
+
+			<div *ngIf="activeForm === 'reset'">
+				<div class="login__input">
+					<img src="assets/icons/name.svg" alt="" />
+					<input
+						placeholder="Код"
+						[(ngModel)]="user.resetPin"
+						type="text"
+					/>
+				</div>
+
+				<div class="login__btn">
+					<button
+						[disabled]="!user.resetPin || user.resetPin.length < 6"
+						(click)="checkResetPin()"
+						class="btn"
+					>
+						Далі
+					</button>
+				</div>
+
+				<div class="login__forgot">
+					<span (click)="resetPassword()" *ngIf="timer === 0"
+						>Надіслати код знову</span
+					>
+					<span *ngIf="timer > 0"
+						>Надіслати код знову можна буде через: {{timer}}</span
+					>
+				</div>
+			</div>
+
+			<div *ngIf="activeForm === 'newPassword'">
+				<div class="login__input">
+					<img src="assets/icons/pass.svg" alt="" />
+					<input
+						placeholder="Введіть ваш пароль"
+						[(ngModel)]="user.password"
+						type="password"
+					/>
+				</div>
+
+				<div class="login__input">
+					<img src="assets/icons/pass.svg" alt="" />
+					<input
+						placeholder="Повторіть пароль"
+						[(ngModel)]="user.passwordCheck"
+						type="password"
+					/>
+				</div>
+
+				<div class="login__btn">
+					<button
+						[disabled]="!user.password || !user.passwordCheck || user.password !== user.passwordCheck"
+						(click)="changePassword()"
+						class="btn"
+					>
+						Змінити пароль
+					</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	
-
 </div>
