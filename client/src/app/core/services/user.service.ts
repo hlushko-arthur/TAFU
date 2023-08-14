@@ -106,7 +106,7 @@ export class UserService {
 
 	resetPassword(email: string): void {
 		this._http
-			.post('api/user/resetPassword', {
+			.post('/api/user/resetPassword', {
 				email
 			})
 			.then(
@@ -127,7 +127,7 @@ export class UserService {
 
 	async checkResetPin(email: string, resetPin: string): Promise<boolean> {
 		return await this._http
-			.post('api/user/checkResetPin', {
+			.post('/api/user/checkResetPin', {
 				email,
 				resetPin
 			})
@@ -141,7 +141,7 @@ export class UserService {
 
 	async changePassword(email: string, password: string): Promise<boolean> {
 		return await this._http
-			.post('api/user/changePassword', {
+			.post('/api/user/changePassword', {
 				email,
 				password
 			})

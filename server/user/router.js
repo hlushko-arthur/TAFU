@@ -194,6 +194,13 @@ module.exports = async waw => {
 	// 	} else next();
 	// });
 
+	waw.use((req, res, next) => {
+		res.setHeader('Access-Control-Allow-Origin', 'https://tafu.serveo.net');
+		res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+		res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+		next();
+	});
+
 	const clearUser = user => {
 		user = JSON.parse(JSON.stringify(user));
 
